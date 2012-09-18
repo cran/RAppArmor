@@ -7,11 +7,11 @@
 #include <errno.h>
 #include <stdbool.h>
 
-void setuid_wrapper (int *ret, int *uid, bool *verbose) {
+void setpgid_wrapper (int *ret, int *pgid, bool *verbose) {
   if(*verbose){
-	  Rprintf("Setting uid...\n");
+	  Rprintf("Setting pgid...\n");
   }
-  *ret = setuid (*uid);
+  *ret = setpgid (0, *pgid);
   if(*ret != 0){
     *ret = errno;
   }
