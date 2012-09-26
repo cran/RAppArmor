@@ -2,7 +2,8 @@
 \alias{rlimit_cpu}
 \title{Limit CPU time}
 \usage{
-  rlimit_cpu(hardlim, softlim = hardlim, pid = 0)
+  rlimit_cpu(hardlim, softlim = hardlim, pid = 0,
+    verbose = TRUE)
 }
 \arguments{
   \item{hardlim}{cpu time in seconds}
@@ -10,10 +11,14 @@
   \item{softlim}{cpu time in seconds}
 
   \item{pid}{id of the target process}
+
+  \item{verbose}{print some C output (TRUE/FALSE)}
 }
 \description{
   CPU time limit in seconds. When the process reaches the
-  soft limit, it is sent a SIGXCPU signal.
+  soft limit, it is sent a SIGXCPU signal. Note that CPU
+  time is not the same as elapsed time. If a process is
+  waiting/idle, it will not hit the CPU time limit.
 }
 \details{
   CPU time limit in seconds. When the process reaches the

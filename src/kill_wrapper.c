@@ -5,13 +5,15 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <errno.h>
+#include <sys/types.h>
+#include <signal.h>
 #include <stdbool.h>
 
-void setuid_wrapper (int *ret, int *uid, bool *verbose) {
+void kill_wrapper (int *ret, int *pid, int *sig, bool *verbose) {
   if(*verbose){
-	  Rprintf("Setting uid...\n");
+	  Rprintf("Killing process...\n");
   }
-  *ret = setuid (*uid);
+  *ret = kill (*pid, *sig);
   if(*ret != 0){
     *ret = errno;
   }
