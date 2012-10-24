@@ -30,6 +30,8 @@
 #' @param timeout timeout in seconds.
 #' @param silent suppress output on stdout. See mcparallel().
 #' @param verbose print some C output (TRUE/FALSE)
+#' @param interactive TRUE/FALSE to enable/disable R interactive mode.
+#' @param affinity which cpu(s) to use. See setaffinity.
 #' @param RLIMIT_AS hard limit passed on to rlimit_as()
 #' @param RLIMIT_CORE hard limit passed on to rlimit_core()
 #' @param RLIMIT_CPU hard limit passed on to rlimit_cpu()
@@ -44,7 +46,7 @@
 #' @param RLIMIT_RTTIME hard limit passed on to rlimit_rttime()
 #' @param RLIMIT_SIGPENDING hard limit passed on to rlimit_sigpending()
 #' @param RLIMIT_STACK hard limit passed on to rlimit_stack()
-#' @import parallel tools
+#' @import parallel tools methods
 #' @export
 #' @examples \dontrun{
 #'## Restricting file access ##
@@ -83,7 +85,8 @@
 #'eval.secure(forkbomb(), RLIMIT_NPROC=10)
 #'}
 
-eval.secure <- function(..., uid, gid, priority, profile, timeout=60, silent=FALSE, verbose=TRUE,
+eval.secure <- function(..., uid, gid, priority, profile, timeout=60, 
+	silent=FALSE, verbose=FALSE, interactive=FALSE, affinity,
 	RLIMIT_AS, RLIMIT_CORE, RLIMIT_CPU, RLIMIT_DATA, RLIMIT_FSIZE, RLIMIT_MEMLOCK,
 	RLIMIT_MSGQUEUE, RLIMIT_NICE, RLIMIT_NOFILE, RLIMIT_NPROC, RLIMIT_RTPRIO, 
 	RLIMIT_RTTIME, RLIMIT_SIGPENDING, RLIMIT_STACK){	
@@ -104,7 +107,7 @@ eval.secure <- function(..., uid, gid, priority, profile, timeout=60, silent=FAL
 		#set the process group
 		#to do: somehow prevent forks from modifying process group.
 		setpgid(verbose=FALSE);
-						
+		
 		if(!missing(RLIMIT_AS)) rlimit_as(RLIMIT_AS, verbose=verbose);
 		if(!missing(RLIMIT_CORE)) rlimit_core(RLIMIT_CORE, verbose=verbose);
 		if(!missing(RLIMIT_CPU)) rlimit_cpu(RLIMIT_CPU, verbose=verbose);
@@ -119,10 +122,20 @@ eval.secure <- function(..., uid, gid, priority, profile, timeout=60, silent=FAL
 		if(!missing(RLIMIT_RTTIME)) rlimit_rttime(RLIMIT_RTTIME, verbose=verbose);
 		if(!missing(RLIMIT_SIGPENDING)) rlimit_sigpending(RLIMIT_SIGPENDING, verbose=verbose);
 		if(!missing(RLIMIT_STACK)) rlimit_stack(RLIMIT_STACK, verbose=verbose);
+		if(!missing(affinity)) setaffinity(affinity, verbose=verbose);
 		if(!missing(priority)) setpriority(priority, verbose=verbose);
 		if(!missing(gid)) setgid(gid, verbose=verbose);
 		if(!missing(uid)) setuid(uid, verbose=verbose);		
 		if(!missing(profile)) aa_change_profile(profile, verbose=verbose);
+		
+		#Set the child proc in batch mode to avoid problems when it gets killed:
+		if(interactive == FALSE){
+			setinteractive(FALSE);
+			options(device=pdf);
+			options(menu.graphics=FALSE);
+		}
+		
+		#evaluate expression
 		eval(...);
 	}, silent=silent);	
 
@@ -133,7 +146,7 @@ eval.secure <- function(..., uid, gid, priority, profile, timeout=60, silent=FAL
 	kill(myfork$pid, SIGKILL, verbose=verbose);
 	
 	#kill process group, in case of forks, etc.
-	kill(-1* myfork$pid, SIGKILL, verbose=FALSE);
+	kill(-1* myfork$pid, SIGKILL, verbose=verbose);
 	
 	#clean up
 	mccollect(wait=FALSE);

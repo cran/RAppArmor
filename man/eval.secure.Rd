@@ -3,12 +3,12 @@
 \title{Secure evaluation}
 \usage{
   eval.secure(..., uid, gid, priority, profile,
-    timeout = 60, silent = FALSE, verbose = TRUE,
-    RLIMIT_AS, RLIMIT_CORE, RLIMIT_CPU, RLIMIT_DATA,
-    RLIMIT_FSIZE, RLIMIT_MEMLOCK, RLIMIT_MSGQUEUE,
-    RLIMIT_NICE, RLIMIT_NOFILE, RLIMIT_NPROC,
-    RLIMIT_RTPRIO, RLIMIT_RTTIME, RLIMIT_SIGPENDING,
-    RLIMIT_STACK)
+    timeout = 60, silent = FALSE, verbose = FALSE,
+    interactive = FALSE, affinity, RLIMIT_AS, RLIMIT_CORE,
+    RLIMIT_CPU, RLIMIT_DATA, RLIMIT_FSIZE, RLIMIT_MEMLOCK,
+    RLIMIT_MSGQUEUE, RLIMIT_NICE, RLIMIT_NOFILE,
+    RLIMIT_NPROC, RLIMIT_RTPRIO, RLIMIT_RTTIME,
+    RLIMIT_SIGPENDING, RLIMIT_STACK)
 }
 \arguments{
   \item{...}{arguments passed on to eval(...)}
@@ -28,6 +28,11 @@
   mcparallel().}
 
   \item{verbose}{print some C output (TRUE/FALSE)}
+
+  \item{interactive}{TRUE/FALSE to enable/disable R
+  interactive mode.}
+
+  \item{affinity}{which cpu(s) to use. See setaffinity.}
 
   \item{RLIMIT_AS}{hard limit passed on to rlimit_as()}
 

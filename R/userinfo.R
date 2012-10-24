@@ -6,9 +6,13 @@
 #' @param uid integer specifying the uid of the user to lookup.
 #' @param gid integer specifying the gid to lookup.
 #' @return a parsed row from /etc/passwd
+#' @references http://manpages.ubuntu.com/manpages/precise/man5/passwd.5.html
 #' @export
 userinfo <- function(username, uid, gid){
-	allusers <- read.table("/etc/passwd", sep=":");
+	allusers <- try(read.table("/etc/passwd", sep=":"));
+	if(is(allusers, "try-error")){
+		stop("Failed to read /etc/passwd. Probably permission denied.")
+	}
 	names(allusers) <- c("username", "pw",  "uid", "gid", "userinfo", "home", "shell");	
 	if(!missing(username)){
 		username <- as.character(username);
