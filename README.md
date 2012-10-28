@@ -1,51 +1,73 @@
 RAppArmor
 =========
 
-The R package RAppArmor or its debianized version r-cran-rapparmor, interfaces to a number of security related 
-methods in the Linux kernel. 
+The R package RAppArmor interfaces to a number of security related methods in the Linux kernel. It supports the following functionality:
+
+ * loading and changing AppArmor profiles and hats to enforce advanced security policies
+ * setting RLIMIT values to restrict usage of memory, cpu, disk, etc
+ * setting the process priority
+ * switching uid/gid of the current process
+ * setting the affinity mask of the current process
+ * calling an R command with a 'timeout' to kill if it does not return with in n seconds
+ * doing all of the above dynamically for a single R call using the `eval.secure` function  
+ 
+This can be useful for example if to host a public service for users to run R code, or if you are paranoid about running contributed code on your machine. 
+
 
 Documentation
 -------------
 
-The most complete documentation can be found in the latest draft for the [JSS paper](https://github.com/jeroenooms/RAppArmor/raw/master/paper/document.pdf) for this package.
+The most complete documentation can be found in the latest draft for the [JSS paper](https://github.com/jeroenooms/RAppArmor/raw/master/paper/document.pdf) for this package. 
+There is of course also the [PDF manual](http://cran.r-project.org/web/packages/RAppArmor/RAppArmor.pdf) on CRAN. 
 
 Support
 -------
 
 The package has been successfully build on:
 
-* Ubuntu 12.04 and up
-* Debian 7 and up
-* OpenSuse 12.1 and up
+* Ubuntu 12.04 *(recommended)* and up
+* Debian 7 and up - [install notes](https://github.com/jeroenooms/RAppArmor/blob/master/Debian-Wheezy.txt)
+* OpenSuse 12.1 and up - [install notes](https://github.com/jeroenooms/RAppArmor/blob/master/OpenSuse.txt)
 
-For Ubuntu and Debian there is a convenient installation package available. 
+For Ubuntu there is a convenient installation package available through launchpad. 
 
-Installation
-------------
+Installation on Ubuntu
+----------------------
 
-On Ubuntu the package is easily installed through launchpad:
+On Ubuntu the package is easily installed through launchpad (recommended):
 
     sudo add-apt-repository ppa:opencpu/rapparmor
     sudo apt-get update
     sudo apt-get install r-cran-rapparmor
+    
+To uninstall the r-cran-rapparmor package (also recommended before upgrading):
+
+    sudo apt-get remove --purge r-cran-rapparmor
 
 
-Alternatively, to manually install:
+Alternatively, to manually install RAppArmor on Ubuntu:
 
-    #Download the package:
+    #Install dependencies:
+    sudo apt-get install r-base-dev libapparmor-dev apparmor-utils
+
+    #Download and install the package:
     wget https://github.com/jeroenooms/RAppArmor/zipball/master -O RAppArmor.zip
     unzip RAppArmor.zip
-    
-    #Install:
-    sudo apt-get install r-base-dev libapparmor-dev apparmor
     sudo R CMD INSTALL jeroenooms-RAppArmor*
     
-    #Install test profile:
+    #Install the profiles
     cd /usr/local/lib/R/site-library/RAppArmor/
     sudo cp -Rf profiles/debian/* /etc/apparmor.d/
     
-    #Restart AppArmor
+    #Load the profiles into the kernel
     sudo service apparmor restart
+    
+Installation on Debian / OpenSuse
+-----------------------------------    
+
+For Debian, see [Debian install notes](https://github.com/jeroenooms/RAppArmor/blob/master/Debian-Wheezy.txt). 
+For OpenSuse, see these [Suse install notes](https://github.com/jeroenooms/RAppArmor/blob/master/OpenSuse.txt).
+We haven't tested other distributions (yet).
 
 
 Enforce/Disable
@@ -73,11 +95,25 @@ Use the `eval.secure` function to dynamically evaluate a call under a certain Ap
 You can also add RLIMIT values:
 
 	A <- matrix(rnorm(1e7), 1e4);
-    B <- eval.secure(matrix(rnorm(1e7), 1e4), RLIMIT_AS = 1000*1024*1024);
+    B <- eval.secure(matrix(rnorm(1e7), 1e4), RLIMIT_AS = 100*1024*1024);
     
 If R is running with superuser privileges, you can also evaluate a call as a certain user:
 
     eval.secure(system('whoami', intern=TRUE), uid="jeroen")
-        
 
+Unit Testing
+------------
+
+The RAppArmor package ships with some unit tests that can be used to check if things are working properly:
+
+    library(RAppArmor)
+    unittests();        
     
+See the `?unittests` help page for more info.
+
+Problems / Questions / Etc
+--------------------------
+
+For any problems, questions, suggestions on the installation or use of RAppArmor, please get in touch! 
+We are very interested in hearing if anything is unclear or not working as expected. 
+Either [post an issue on github](https://github.com/jeroenooms/RAppArmor/issues), or send an email to [the maintainer](https://github.com/jeroenooms/RAppArmor/blob/master/DESCRIPTION).   

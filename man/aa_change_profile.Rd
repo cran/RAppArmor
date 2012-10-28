@@ -17,9 +17,14 @@
   another profile, otherwise it would defeat the purpose.
 }
 \examples{
-\dontrun{read.table("/etc/passwd");
-aa_change_profile("myprofile");
-read.table("/etc/passwd");
+\dontrun{
+test <- read.table("/etc/passwd");
+aa_change_profile("testprofile");
+aa_getcon();
+test <- read.table("/etc/passwd");
 }
+}
+\references{
+  http://manpages.ubuntu.com/manpages/precise/man2/aa_change_profile.2.html
 }
 

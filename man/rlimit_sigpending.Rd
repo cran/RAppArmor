@@ -3,7 +3,7 @@
 \title{Limit signal queue}
 \usage{
   rlimit_sigpending(hardlim, softlim = hardlim, pid = 0,
-    verbose = TRUE)
+    verbose = FALSE)
 }
 \arguments{
   \item{hardlim}{number of signals}
@@ -56,6 +56,9 @@ rlimit_rttime(1e9);
 rlimit_sigpending(1e4);
 rlimit_stack(1000);
 rlimit_cpu(10);
+}
+\references{
+  http://manpages.ubuntu.com/manpages/precise/man2/getrlimit.2.html
 }
 \seealso{
   Other rlimit: \code{\link{rlimit_as}},

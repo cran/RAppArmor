@@ -16,11 +16,15 @@
 #' @param hardlim hard limit in bytes
 #' @param pid id of the target process.
 #' @param verbose print some C output (TRUE/FALSE)
+#' @references http://manpages.ubuntu.com/manpages/precise/man2/getrlimit.2.html
 #' @export
 #' @family rlimit
 #' @example examples/limits.R
-rlimit_as <- function(hardlim, softlim=hardlim, pid = 0, verbose=TRUE){
+rlimit_as <- function(hardlim, softlim=hardlim, pid = 0, verbose=FALSE){
 	if(missing(hardlim)) hardlim <- NULL;
+	if(!is.null(hardlim) && hardlim >= 2*1024*1024*1024){
+		warning("RLIMIT_AS can never be set higher than 2GB. See ?rlimit_as.")
+	}
 	rlimit_wrapper('rlimit_as', hardlim, softlim, pid, verbose);
 }
 
@@ -33,10 +37,11 @@ rlimit_as <- function(hardlim, softlim=hardlim, pid = 0, verbose=TRUE){
 #' @param softlim size
 #' @param pid id of the target process
 #' @param verbose print some C output (TRUE/FALSE)
+#' @references http://manpages.ubuntu.com/manpages/precise/man2/getrlimit.2.html
 #' @export
 #' @family rlimit
 #' @example examples/limits.R
-rlimit_core <- function(hardlim, softlim=hardlim, pid = 0, verbose=TRUE){
+rlimit_core <- function(hardlim, softlim=hardlim, pid = 0, verbose=FALSE){
 	if(missing(hardlim)) hardlim <- NULL;
 	rlimit_wrapper('rlimit_core', hardlim, softlim, pid, verbose);
 }
@@ -44,9 +49,18 @@ rlimit_core <- function(hardlim, softlim=hardlim, pid = 0, verbose=TRUE){
 #' Limit CPU time
 #' 
 #' CPU time limit in seconds. When the process reaches the soft
-#' limit, it is sent a SIGXCPU signal. Note that CPU time is not 
-#' the same as elapsed time. If a process is waiting/idle, it will
-#' not hit the CPU time limit.
+#' limit, it is sent a SIGXCPU signal. 
+#' 
+#' Note that CPU time is not the same as elapsed time. If a process 
+#' is waiting/idle, it will not count towards the CPU time limit. 
+#' See the example for ?rlimit_cpu. Use the 'timeout' parameter in 
+#' ?eval.secure to limit the total elapsed time for a function call.
+#' 
+#' Use rlimit_cpu only as a last-resort if-all-else-fails method. 
+#' When the cpu limit is hit, the kernel kills the process without 
+#' any warning. It is pretty much a ticking timebomb that cannot be
+#' undone. When using eval.secure, best practice is to make sure that
+#' the value for rlimit_cpu is higher than timeout. 
 #' 
 #' CPU time limit in seconds. When the process reaches the soft
 #' limit, it is sent a SIGXCPU signal. The default action for this
@@ -65,10 +79,21 @@ rlimit_core <- function(hardlim, softlim=hardlim, pid = 0, verbose=TRUE){
 #' @param softlim cpu time in seconds
 #' @param pid id of the target process
 #' @param verbose print some C output (TRUE/FALSE)
+#' @references http://manpages.ubuntu.com/manpages/precise/man2/getrlimit.2.html
 #' @export
 #' @family rlimit
-#' @example examples/limits.R
-rlimit_cpu <- function(hardlim, softlim=hardlim, pid = 0, verbose=TRUE){
+#' @examples \dontrun{testfun <- function(){
+#'   Sys.sleep(3);
+#'   repeat{
+#'     svd(matrix(rnorm(1e6,1e3)));
+#'   }
+#' };
+#' #will be killed after 8 seconds (3s idle, 5s CPU):
+#' system.time(eval.secure(testfun(), RLIMIT_CPU=5));
+#' 
+#' #will be killed after 5 seconds
+#' system.time(eval.secure(testfun(), timeout=5));}
+rlimit_cpu <- function(hardlim, softlim=hardlim, pid = 0, verbose=FALSE){
 	if(missing(hardlim)) hardlim <- NULL;
 	rlimit_wrapper('rlimit_cpu', hardlim, softlim, pid, verbose);
 }
@@ -87,10 +112,11 @@ rlimit_cpu <- function(hardlim, softlim=hardlim, pid = 0, verbose=TRUE){
 #' @param softlim size
 #' @param pid id of the target process
 #' @param verbose print some C output (TRUE/FALSE)
+#' @references http://manpages.ubuntu.com/manpages/precise/man2/getrlimit.2.html
 #' @export
 #' @family rlimit
 #' @example examples/limits.R
-rlimit_data <- function(hardlim, softlim=hardlim, pid = 0, verbose=TRUE){
+rlimit_data <- function(hardlim, softlim=hardlim, pid = 0, verbose=FALSE){
 	if(missing(hardlim)) hardlim <- NULL;
 	rlimit_wrapper('rlimit_data', hardlim, softlim, pid, verbose);
 }
@@ -111,10 +137,11 @@ rlimit_data <- function(hardlim, softlim=hardlim, pid = 0, verbose=TRUE){
 #' @param softlim size
 #' @param pid id of the target process
 #' @param verbose print some C output (TRUE/FALSE)
+#' @references http://manpages.ubuntu.com/manpages/precise/man2/getrlimit.2.html
 #' @export
 #' @family rlimit
 #' @example examples/limits.R
-rlimit_fsize <- function(hardlim, softlim=hardlim, pid = 0, verbose=TRUE){
+rlimit_fsize <- function(hardlim, softlim=hardlim, pid = 0, verbose=FALSE){
 	if(missing(hardlim)) hardlim <- NULL;
 	rlimit_wrapper('rlimit_fsize', hardlim, softlim, pid, verbose);
 }
@@ -148,10 +175,11 @@ rlimit_fsize <- function(hardlim, softlim=hardlim, pid = 0, verbose=TRUE){
 #' @param softlim number of bytes
 #' @param pid id of the target process
 #' @param verbose print some C output (TRUE/FALSE)
+#' @references http://manpages.ubuntu.com/manpages/precise/man2/getrlimit.2.html
 #' @export
 #' @family rlimit
 #' @example examples/limits.R
-rlimit_memlock <- function(hardlim, softlim=hardlim, pid = 0, verbose=TRUE){
+rlimit_memlock <- function(hardlim, softlim=hardlim, pid = 0, verbose=FALSE){
 	if(missing(hardlim)) hardlim <- NULL;
 	rlimit_wrapper('rlimit_memlock', hardlim, softlim, pid, verbose);
 }
@@ -185,10 +213,11 @@ rlimit_memlock <- function(hardlim, softlim=hardlim, pid = 0, verbose=TRUE){
 #' @param softlim number of bytes
 #' @param pid id of the target process
 #' @param verbose print some C output (TRUE/FALSE)
+#' @references http://manpages.ubuntu.com/manpages/precise/man2/getrlimit.2.html
 #' @export
 #' @family rlimit
 #' @example examples/limits.R
-rlimit_msgqueue <- function(hardlim, softlim=hardlim, pid = 0, verbose=TRUE){
+rlimit_msgqueue <- function(hardlim, softlim=hardlim, pid = 0, verbose=FALSE){
 	if(missing(hardlim)) hardlim <- NULL;
 	rlimit_wrapper('rlimit_msgqueue', hardlim, softlim, pid, verbose);
 }
@@ -210,10 +239,11 @@ rlimit_msgqueue <- function(hardlim, softlim=hardlim, pid = 0, verbose=TRUE){
 #' @param softlim priority value between -20 and 20
 #' @param pid id of the target process
 #' @param verbose print some C output (TRUE/FALSE)
+#' @references http://manpages.ubuntu.com/manpages/precise/man2/getrlimit.2.html
 #' @export
 #' @family rlimit
 #' @example examples/limits.R
-rlimit_nice <- function(hardlim, softlim=hardlim, pid = 0, verbose=TRUE){
+rlimit_nice <- function(hardlim, softlim=hardlim, pid = 0, verbose=FALSE){
 	if(missing(hardlim)) hardlim <- NULL;
 	rlimit_wrapper('rlimit_nice', hardlim, softlim, pid, verbose);
 }
@@ -233,10 +263,11 @@ rlimit_nice <- function(hardlim, softlim=hardlim, pid = 0, verbose=TRUE){
 #' @param softlim number greater than 1
 #' @param pid id of the target process
 #' @param verbose print some C output (TRUE/FALSE)
+#' @references http://manpages.ubuntu.com/manpages/precise/man2/getrlimit.2.html
 #' @export
 #' @family rlimit
 #' @example examples/limits.R
-rlimit_nofile <- function(hardlim, softlim=hardlim, pid = 0, verbose=TRUE){
+rlimit_nofile <- function(hardlim, softlim=hardlim, pid = 0, verbose=FALSE){
 	if(missing(hardlim)) hardlim <- NULL;
 	rlimit_wrapper('rlimit_nofile', hardlim, softlim, pid, verbose);
 }
@@ -256,10 +287,11 @@ rlimit_nofile <- function(hardlim, softlim=hardlim, pid = 0, verbose=TRUE){
 #' @param softlim number greater than 1
 #' @param pid id of the target process
 #' @param verbose print some C output (TRUE/FALSE)
+#' @references http://manpages.ubuntu.com/manpages/precise/man2/getrlimit.2.html
 #' @export
 #' @family rlimit
 #' @example examples/limits.R
-rlimit_nproc <- function(hardlim, softlim=hardlim, pid = 0, verbose=TRUE){
+rlimit_nproc <- function(hardlim, softlim=hardlim, pid = 0, verbose=FALSE){
 	if(missing(hardlim)) hardlim <- NULL;
 	rlimit_wrapper('rlimit_nproc', hardlim, softlim, pid, verbose);
 }
@@ -277,10 +309,11 @@ rlimit_nproc <- function(hardlim, softlim=hardlim, pid = 0, verbose=TRUE){
 #' @param softlim real time priority value
 #' @param pid id of the target process
 #' @param verbose print some C output (TRUE/FALSE)
+#' @references http://manpages.ubuntu.com/manpages/precise/man2/getrlimit.2.html
 #' @export
 #' @family rlimit
 #' @example examples/limits.R
-rlimit_rtprio <- function(hardlim, softlim=hardlim, pid = 0, verbose=TRUE){
+rlimit_rtprio <- function(hardlim, softlim=hardlim, pid = 0, verbose=FALSE){
 	if(missing(hardlim)) hardlim <- NULL;
 	rlimit_wrapper('rlimit_rtprio', hardlim, softlim, pid, verbose);
 }
@@ -314,10 +347,11 @@ rlimit_rtprio <- function(hardlim, softlim=hardlim, pid = 0, verbose=TRUE){
 #' @param softlim time in microsec
 #' @param pid id of the target process
 #' @param verbose print some C output (TRUE/FALSE)
+#' @references http://manpages.ubuntu.com/manpages/precise/man2/getrlimit.2.html
 #' @export
 #' @family rlimit
 #' @example examples/limits.R
-rlimit_rttime <- function(hardlim, softlim=hardlim, pid = 0, verbose=TRUE){
+rlimit_rttime <- function(hardlim, softlim=hardlim, pid = 0, verbose=FALSE){
 	if(missing(hardlim)) hardlim <- NULL;
 	rlimit_wrapper('rlimit_rttime', hardlim, softlim, pid, verbose);
 }
@@ -339,10 +373,11 @@ rlimit_rttime <- function(hardlim, softlim=hardlim, pid = 0, verbose=TRUE){
 #' @param softlim number of signals
 #' @param pid id of the target process
 #' @param verbose print some C output (TRUE/FALSE)
+#' @references http://manpages.ubuntu.com/manpages/precise/man2/getrlimit.2.html
 #' @export
 #' @family rlimit
 #' @example examples/limits.R
-rlimit_sigpending <- function(hardlim, softlim=hardlim, pid = 0, verbose=TRUE){
+rlimit_sigpending <- function(hardlim, softlim=hardlim, pid = 0, verbose=FALSE){
 	if(missing(hardlim)) hardlim <- NULL;
 	rlimit_wrapper('rlimit_sigpending', hardlim, softlim, pid, verbose);
 }
@@ -365,16 +400,17 @@ rlimit_sigpending <- function(hardlim, softlim=hardlim, pid = 0, verbose=TRUE){
 #' @param softlim size of stack
 #' @param pid id of the target process
 #' @param verbose print some C output (TRUE/FALSE)
+#' @references http://manpages.ubuntu.com/manpages/precise/man2/getrlimit.2.html
 #' @export
 #' @family rlimit
 #' @example examples/limits.R
-rlimit_stack <- function(hardlim, softlim=hardlim, pid = 0, verbose=TRUE){
+rlimit_stack <- function(hardlim, softlim=hardlim, pid = 0, verbose=FALSE){
 	if(missing(hardlim)) hardlim <- NULL;
 	rlimit_wrapper('rlimit_stack', hardlim, softlim, pid, verbose);
 }
 
 
-rlimit_wrapper <- function(resource, hardlim = NULL, softlim = NULL, pid = 0, verbose=TRUE){
+rlimit_wrapper <- function(resource, hardlim = NULL, softlim = NULL, pid = 0, verbose=FALSE){
 	verbose <- as.integer(verbose);
 	if(is.null(hardlim)) {
 		hardlim <- -999;
@@ -387,6 +423,22 @@ rlimit_wrapper <- function(resource, hardlim = NULL, softlim = NULL, pid = 0, ve
 	softlim <- as.double(softlim);
 	ret <- integer(1);
 	output <- .C(resource, ret, hardlim, softlim, pid, verbose, PACKAGE="RAppArmor")
-	if(output[[1]] != 0) stop("Failed to set ", resource, "\nError: ", output[[1]]);	
-	invisible();	
+	
+	if(output[[1]] != 0) {
+		ermsg <- errno(output[[1]]);
+		ermsg <- switch(ermsg,
+			EFAULT = "A pointer argument points to a location outside the accessible address space.",
+		  	EINVAL = "The value specified in resource is not valid; or rlim->rlim_cur was greater than rlim->rlim_max.",
+		  	EPERM = "An unprivileged process tried to raise the hard limit; the CAP_SYS_RESOURCE capability is required to do this.\n  Or, the caller tried to increase the hard RLIMIT_NOFILE limit above the current kernel maximum (NR_OPEN).",
+			ermsg
+		);
+		stop("Failed to set rlimit. ", ermsg);
+	} else{
+		return(
+			list(
+				hardlim = output[[2]],
+				softlim = output[[3]]
+			)
+		);
+	}
 }
