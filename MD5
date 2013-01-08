@@ -1,8 +1,8 @@
 197b49424a8269485401657842dba61c *CHANGES
-11530f589e55bb797528d3fd8dd751ef *DESCRIPTION
-d87d6c0fea142ceb25c121b64fb6f79d *Debian-Wheezy.txt
+8a2b1233af56e5e76dbc1945273d652d *DESCRIPTION
+517ba58eb661e2181204debf3764e208 *Debian-Wheezy.txt
 803bad9b4d0e531bbca3c1755491f20b *NAMESPACE
-7f2e7c317d13e2e924e82919c7b4ea83 *OpenSuse.txt
+cff7a9ab45e607a7bfa8fcdb7d7b7372 *OpenSuse.txt
 023a1f58506328e57f3b42dbbecbee27 *R/aa_change_hat.R
 980d0237bb110b12674f4418d0389eae *R/aa_change_profile.R
 abca206e69eb89b42c923381389e2315 *R/aa_find_mountpoint.R
@@ -23,7 +23,8 @@ e71a5d027d0ee08c568cd8ead420041e *R/setpriority.R
 6ae98559d061a7d8bb8688ffb24203c6 *R/setuid.R
 ae87530df731a438743289e90885de22 *R/unittests.R
 567192cc88c4d2b7983f90df0b3562b5 *R/userinfo.R
-101395d39b3f629316759916bb6d120b *README.md
+e2cf737c1f8f602010a15cf6bd55ef76 *README.md
+2bde3cad53d6ddeace0c18433ee5419f *Tutorials.txt
 72bb9a824bb45a03d0d2700d29144e25 *configure
 7f41d4d93eab5952ca806b4ad355cf25 *debian/changelog
 bf85e42fa3080787216907cd309ac4a7 *debian/control
@@ -40,7 +41,7 @@ faa3da53ab1a9dce8e67e5722a1c6311 *examples/test-r-base.R
 57351a2ec9a34d0bc559a69a97265b71 *inst/profiles/debian/rapparmor.d/r-compile
 83ef19daf354d2ed24bff832b15f5a02 *inst/profiles/debian/rapparmor.d/r-user
 b180f49c1a30a961799e8255bfdd6ea5 *inst/profiles/debian/rapparmor.d/testprofile
-4ac8033c98a1ae0b02b7d810aca48482 *inst/profiles/debian/usr.bin.r
+4a3279bb11038d95afe3cecd1aba6b88 *inst/profiles/debian/usr.bin.r
 3cb10aa93142216a0ea3e98230475974 *inst/profiles/suse/rapparmor
 7818a0ce1c2b70e374c4b0d917da5957 *inst/profiles/suse/rapparmor.d/r-base
 129e08a7052eb86a3bb7030a00fb66ce *inst/profiles/suse/rapparmor.d/r-compile
@@ -50,7 +51,7 @@ d35286d24d5685afd78db8958fb1ad6e *inst/profiles/suse/usr.bin.r
 21916f2f88f64b5be3178295b2961fbd *inst/tests/README
 2d11eb6057fcaf0176b2131864c9bae3 *inst/tests/test-aaa.R
 42d431d694bccbfdcad91bbc732bb7b0 *inst/tests/test-affinity.R
-cfcd82e894c8d8214f2ecb5255f6883b *inst/tests/test-apparmor.R
+827615b1893d1efa8c45c3534adcdab8 *inst/tests/test-apparmor.R
 89486905964c0e0afaab77786815eac3 *inst/tests/test-priority.R
 a32ed657174b5189ce039389921a4022 *inst/tests/test-rlimit_cpu.R
 244e4b69e05bc21b990bb21752aef5a4 *inst/tests/test-rlimit_memory.R
@@ -110,7 +111,7 @@ f727dff7605ec69754d73a922cbcf963 *src/ncores.c
 d93bb80e584e7e6c4262ee1f1481843c *src/rlimits.c
 df090755b04421028a1382cb74f4c8f6 *src/setaffinity_wrapper.c
 d9e9ee252ecfc29b189ab0fd6db779c8 *src/setgid_wrapper.c
-429986b136efcb5ac8e28184c3874af1 *src/setpgid_wrapper.c
+693fb9808c8bcc70485843fbd0f55d15 *src/setpgid_wrapper.c
 9d707d07bb6d357ad32e9ef9b169a1f4 *src/setpriority_wrapper.c
 b269c11b214ac9564c90c7de15c51029 *src/setuid_wrapper.c
 99a3212b0846cf262aa1e2eeae564977 *tests/run-all.R

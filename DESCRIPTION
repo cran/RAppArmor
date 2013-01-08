@@ -1,8 +1,8 @@
 Package: RAppArmor
 Type: Package
 Title: RAppArmor
-Version: 0.8.0
-Date: 2012-10-24
+Version: 0.8.1
+Date: 2012-11-20
 Author: Jeroen Ooms
 Maintainer: Jeroen Ooms <jeroen.ooms@stat.ucla.edu>
 Description: R interfaces to Linux and AppArmor security stuff.
@@ -13,7 +13,6 @@ OS_type: unix
 SystemRequirements: libapparmor-dev
 Suggests: testthat
 Imports: parallel, tools, methods
-Packaged: 2012-10-24 18:45:54 UTC; jeroen
-X-CRAN-Original-OS_type: unix
+Packaged: 2013-01-07 23:04:58 UTC; jeroen
 Repository: CRAN
-Date/Publication: 2012-10-28 12:14:55
+Date/Publication: 2013-01-08 08:27:11

@@ -20,6 +20,12 @@ Documentation
 The most complete documentation can be found in the latest draft for the [JSS paper](https://github.com/jeroenooms/RAppArmor/raw/master/paper/document.pdf) for this package. 
 There is of course also the [PDF manual](http://cran.r-project.org/web/packages/RAppArmor/RAppArmor.pdf) on CRAN. 
 
+Video Tutorials
+---------------
+
+A number of short "Introduction to RAppArmor" video tutorials is available to quickly get started with AppArmor and R and wrap your head around
+the basic concepts. Sit back and enjoy: [playlist on youtube](http://www.youtube.com/playlist?list=PL3ZKTMqqbMktzcWjXuQCWOYc-fMROs3cf&feature=view_all) 
+
 Support
 -------
 
@@ -51,9 +57,7 @@ Alternatively, to manually install RAppArmor on Ubuntu:
     sudo apt-get install r-base-dev libapparmor-dev apparmor-utils
 
     #Download and install the package:
-    wget https://github.com/jeroenooms/RAppArmor/zipball/master -O RAppArmor.zip
-    unzip RAppArmor.zip
-    sudo R CMD INSTALL jeroenooms-RAppArmor*
+    sudo R -e 'install.packages("RAppArmor", repos="http://cran.r-project.org")'
     
     #Install the profiles
     cd /usr/local/lib/R/site-library/RAppArmor/
@@ -61,6 +65,9 @@ Alternatively, to manually install RAppArmor on Ubuntu:
     
     #Load the profiles into the kernel
     sudo service apparmor restart
+    
+    #To disable enforcing the global R profile
+    sudo aa-disable usr.bin.r
     
 Installation on Debian / OpenSuse
 -----------------------------------    
@@ -116,4 +123,7 @@ Problems / Questions / Etc
 
 For any problems, questions, suggestions on the installation or use of RAppArmor, please get in touch! 
 We are very interested in hearing if anything is unclear or not working as expected. 
-Either [post an issue on github](https://github.com/jeroenooms/RAppArmor/issues), or send an email to [the maintainer](https://github.com/jeroenooms/RAppArmor/blob/master/DESCRIPTION).   
+
+For general help, post a question on [Stack Overflow](http://stackoverflow.com/questions/tagged/rapparmor) and add the following tags: `rapparmor`, `r`, `apparmor`.
+
+To report bugs, either [post an issue on github](https://github.com/jeroenooms/RAppArmor/issues), or send an email to [the maintainer](https://github.com/jeroenooms/RAppArmor/blob/master/DESCRIPTION).   
