@@ -1,6 +1,0 @@
-rapparmor (0.8.3-precise0) precise; urgency=low
-
-  * Ubuntu build of the RAppArmor package for R. See CHANGES for history.
-
- -- Jeroen Ooms <jeroen@opencpu.org>  Tue, 19 March 2013 12:00:00 -0600
-
