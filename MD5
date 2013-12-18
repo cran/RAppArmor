@@ -1,13 +1,13 @@
-a997b896cbc599a1642ccc50a08f24fb *DESCRIPTION
+0dc6fa70c258345b7c8e782ba8ce628c *DESCRIPTION
 4a2722f0f8c1c9becb16fda99b21cf8a *NAMESPACE
-b86e030fdbdef4d993c03281e3520925 *NEWS
+d652bf5ffe83bfa63e76bc4ef5e07905 *NEWS
 dbd29004a128e7ee444177dcd2cd4145 *R/aa_change_hat.R
 061176254a775d24334f8224b62cb8dc *R/aa_change_profile.R
 9b54c926411c36f947fbe92a42b452b2 *R/aa_find_mountpoint.R
 5d75e551da2c67f0cd20b1d4fb311802 *R/aa_getcon.R
 212659de4d5ccdf13f3ca4933f46a1e0 *R/aa_is_enabled.R
 f2007f15771b475975968cc724cf8d2e *R/errno.R
-6bbae94d38d1f28c4c7269152d6bd8e9 *R/eval.secure.R
+c0fad956036c12a40736dac227985c2e *R/eval.secure.R
 cd2b1ba42c88ca9258f70717f226fda4 *R/kill.R
 55c1300f6fc43a48364b37733a687442 *R/ncores.R
 982e5ddcef9b5cfa1a6f161ca65bb68f *R/onAttach.R
@@ -20,7 +20,7 @@ edf2268c554e885ce524ded5a4aece56 *R/setpriority.R
 ae87530df731a438743289e90885de22 *R/unittests.R
 aa43d01acfe2b80336e48ae77e666602 *R/userinfo.R
 28f412374329042052bd7a720edaee25 *build/vignette.rds
-72bb9a824bb45a03d0d2700d29144e25 *configure
+1c6bd1569419c7d2b22ae8f34b4626f5 *configure
 65df168ecd1668e1155a10949bf9b0c9 *inst/CITATION
 aa2640273dab46ed5d54d910e772c053 *inst/doc/v55i07.Rnw
 83767e43ab0570381cd07eed4656e334 *inst/doc/v55i07.pdf
@@ -41,7 +41,7 @@ d35286d24d5685afd78db8958fb1ad6e *inst/profiles/suse/usr.bin.r
 42d431d694bccbfdcad91bbc732bb7b0 *inst/tests/test-affinity.R
 827615b1893d1efa8c45c3534adcdab8 *inst/tests/test-apparmor.R
 89486905964c0e0afaab77786815eac3 *inst/tests/test-priority.R
-a32ed657174b5189ce039389921a4022 *inst/tests/test-rlimit_cpu.R
+7ec473e094c15dfbf78f60d0a469adb4 *inst/tests/test-rlimit_cpu.R
 9b47bbcd2cc7901707891be164a58e52 *inst/tests/test-rlimit_memory.R
 f1bcb270c94e1f03cd79f54adfa71052 *inst/tests/test-rlimit_nproc.R
 68d22b784d4add3aa9c3f00dba877e4d *inst/tests/test-root.R
@@ -50,7 +50,7 @@ f1bcb270c94e1f03cd79f54adfa71052 *inst/tests/test-rlimit_nproc.R
 2e0092086ab232d40df2060e7f3ef2ab *man/aa_find_mountpoint.Rd
 3d8c0ba7ed8c28a25d1b73278b6a220e *man/aa_getcon.Rd
 4e08616f3be0ca8cc35426147743bbaa *man/aa_is_enabled.Rd
-c4e80488ffa3f5dfa37028bc0604f202 *man/eval.secure.Rd
+8f37b47b23ad0852cb8835d3a46bcd39 *man/eval.secure.Rd
 66c1446ca888ddde77e80d296b26a82b *man/kill.Rd
 d34b1fd3c962630ea56ace0c8fa06c2a *man/ncores.Rd
 c38f85d5ae49ced21db123b04274d2a9 *man/rlimit_as.Rd

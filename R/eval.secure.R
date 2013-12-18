@@ -2,18 +2,20 @@
 #' 
 #' Evaluate in a sandboxed environment.
 #' 
-#' This function creates a fork, and then sets any rlimits, uid, gid,
-#' priority, apparmor profile where specified, and then evaluates the
-#' expression inside the fork. After evaluation returns, the fork is 
-#' killed. If the timeout is reached the fork is also killed and an
-#' error is thrown.   
+#' This function creates a fork, then sets rlimits, uid, gid, priority, 
+#' apparmor profile where specified, and then evaluates the expression
+#' inside the fork. The return object of the evaluation is copied to 
+#' the parent process and returned by \code{\link{eval.secure}}. After
+#' evaluation is done, the fork is immediately killed. If the timeout is 
+#' reached the fork is also killed and an error is raised.   
 #' 
-#' Evaluation of an expression through secure.eval should never have
-#' any side effects on the current R session. This also means that if 
-#' the code does e.g. assignments to the global environment, sets options(),
-#' these will get lost, as we explicitly want to prevent this. However, if 
-#' the expression saves any files (where allowed by apparmor), these will
-#' still be available after the evaluation finishes.  
+#' Evaluation of an expression using \code{\link{eval.secure}} has no
+#' side effects on the current R session. Any assignments to the global
+#' environment, changes in options, or library loadings done by the 
+#' evaluation will get lost, as we explicitly want to prevent this. 
+#' Only the return value of the expression will be copied to the 
+#' main process. Files saved to disk by the sandboxed evaluation (where
+#' allowed by apparmor profile, etc) will also persist.  
 #' 
 #' Note that if the initial process does not have superuser rights, 
 #' rlimits can only be decreased and setuid/setgid might not work. In 
@@ -22,29 +24,30 @@
 #' of the apparmor profile. When a rlimit is set both in the profile and
 #' through R, the more restrictive one will be effective. 
 #' 
-#' @param ... arguments passed on to eval(...)
-#' @param uid integer or name of linux user.
-#' @param gid integer or name of linux group.
-#' @param priority priority. Value between -20 and 20. 
-#' @param profile AppArmor security profile. Has to be preloaded by Linux.
+#' @param ... arguments passed on to \code{\link{eval}}.
+#' @param uid integer or name of linux user. See \code{\link{setuid}}.
+#' @param gid integer or name of linux group. See \code{\link{setgid}}.
+#' @param priority priority. Value between -20 and 20. See \code{\link{setpriority}}. 
+#' @param profile AppArmor security profile. Has to be preloaded by Linux. See \code{\link{aa_change_profile}}.
 #' @param timeout timeout in seconds.
-#' @param silent suppress output on stdout. See mcparallel().
+#' @param silent suppress output on stdout. See \code{\link{mcparallel}}.
 #' @param verbose print some C output (TRUE/FALSE)
-#' @param affinity which cpu(s) to use. See setaffinity.
-#' @param RLIMIT_AS hard limit passed on to rlimit_as()
-#' @param RLIMIT_CORE hard limit passed on to rlimit_core()
-#' @param RLIMIT_CPU hard limit passed on to rlimit_cpu()
-#' @param RLIMIT_DATA hard limit passed on to rlimit_data()
-#' @param RLIMIT_FSIZE hard limit passed on to rlimit_fsize()
-#' @param RLIMIT_MEMLOCK hard limit passed on to rlimit_memlock()
-#' @param RLIMIT_MSGQUEUE hard limit passed on to rlimit_msgqueue()
-#' @param RLIMIT_NICE hard limit passed on to rlimit_nice()
-#' @param RLIMIT_NOFILE hard limit passed on to rlimit_nofile()
-#' @param RLIMIT_NPROC hard limit passed on to rlimit_nproc()
-#' @param RLIMIT_RTPRIO hard limit passed on to rlimit_rtprio()
-#' @param RLIMIT_RTTIME hard limit passed on to rlimit_rttime()
-#' @param RLIMIT_SIGPENDING hard limit passed on to rlimit_sigpending()
-#' @param RLIMIT_STACK hard limit passed on to rlimit_stack()
+#' @param affinity which cpu(s) to use. See \code{\link{setaffinity}}.
+#' @param closeAllConnections closes (and destroys) all user connections. See \code{\link{closeAllConnections}}.
+#' @param RLIMIT_AS hard limit passed on to \code{\link{rlimit_as}}.
+#' @param RLIMIT_CORE hard limit passed on to \code{\link{rlimit_core}}.
+#' @param RLIMIT_CPU hard limit passed on to \code{\link{rlimit_cpu}}.
+#' @param RLIMIT_DATA hard limit passed on to \code{\link{rlimit_data}}.
+#' @param RLIMIT_FSIZE hard limit passed on to \code{\link{rlimit_fsize}}.
+#' @param RLIMIT_MEMLOCK hard limit passed on to \code{\link{rlimit_memlock}}.
+#' @param RLIMIT_MSGQUEUE hard limit passed on to \code{\link{rlimit_msgqueue}}.
+#' @param RLIMIT_NICE hard limit passed on to \code{\link{rlimit_nice}}.
+#' @param RLIMIT_NOFILE hard limit passed on to \code{\link{rlimit_nofile}}.
+#' @param RLIMIT_NPROC hard limit passed on to \code{\link{rlimit_nproc}}.
+#' @param RLIMIT_RTPRIO hard limit passed on to \code{\link{rlimit_rtprio}}.
+#' @param RLIMIT_RTTIME hard limit passed on to \code{\link{rlimit_rttime}}.
+#' @param RLIMIT_SIGPENDING hard limit passed on to \code{\link{rlimit_sigpending}}.
+#' @param RLIMIT_STACK hard limit passed on to \code{\link{rlimit_stack}}.
 #' @import parallel tools methods
 #' @export
 #' @useDynLib RAppArmor
@@ -87,7 +90,7 @@
 #'}
 
 eval.secure <- function(..., uid, gid, priority, profile, timeout=60, 
-	silent=FALSE, verbose=FALSE, affinity,
+	silent=FALSE, verbose=FALSE, affinity, closeAllConnections=TRUE,
 	RLIMIT_AS, RLIMIT_CORE, RLIMIT_CPU, RLIMIT_DATA, RLIMIT_FSIZE, RLIMIT_MEMLOCK,
 	RLIMIT_MSGQUEUE, RLIMIT_NICE, RLIMIT_NOFILE, RLIMIT_NPROC, RLIMIT_RTPRIO, 
 	RLIMIT_RTTIME, RLIMIT_SIGPENDING, RLIMIT_STACK){	
@@ -108,7 +111,11 @@ eval.secure <- function(..., uid, gid, priority, profile, timeout=60,
 		#set the process group
 		#to do: somehow prevent forks from modifying process group.
 		setpgid(verbose=FALSE);
+
+		#close connections
+		if(isTRUE(closeAllConnections)) closeAllConnections();
 		
+		#linux stuff
 		if(!missing(RLIMIT_AS)) rlimit_as(RLIMIT_AS, verbose=verbose);
 		if(!missing(RLIMIT_CORE)) rlimit_core(RLIMIT_CORE, verbose=verbose);
 		if(!missing(RLIMIT_CPU)) rlimit_cpu(RLIMIT_CPU, verbose=verbose);
