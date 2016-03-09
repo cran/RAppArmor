@@ -1,8 +1,8 @@
 #' Lookup user info
-#' 
+#'
 #' Function looks up uid, gid, and userinfo for a given username.
-#' 
-#' @param username character name identifying the loginname of the user. 
+#'
+#' @param username character name identifying the loginname of the user.
 #' @param uid integer specifying the uid of the user to lookup.
 #' @param gid integer specifying the gid to lookup.
 #' @return a parsed row from /etc/passwd
@@ -10,15 +10,15 @@
 #' @references Ubuntu Manpage: \code{passwd} - \emph{the password file}. \url{http://manpages.ubuntu.com/manpages/precise/man5/passwd.5.html}.
 #' @export
 userinfo <- function(username, uid, gid){
-	allusers <- try(read.table("/etc/passwd", sep=":"));
-	if(is(allusers, "try-error")){
+	allusers <- try(utils::read.table("/etc/passwd", sep=":"));
+	if(inherits(allusers, "try-error")){
 		stop("Failed to read /etc/passwd. Probably permission denied.")
 	}
-	names(allusers) <- c("username", "pw",  "uid", "gid", "userinfo", "home", "shell");	
+	names(allusers) <- c("username", "pw",  "uid", "gid", "userinfo", "home", "shell");
 	if(!missing(username)){
 		username <- as.character(username);
-		user <- allusers[allusers$username == username,];		
-		if(nrow(user) == 0) stop("user ", username, " not found.");		
+		user <- allusers[allusers$username == username,];
+		if(nrow(user) == 0) stop("user ", username, " not found.");
 	} else if(!missing(uid)){
 		uid <- as.character(uid);
 		user <- allusers[allusers$uid == uid,];

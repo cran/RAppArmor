@@ -1,20 +1,30 @@
 Package: RAppArmor
 Type: Package
-Title: Interfaces to Linux and AppArmor security methods.
-Version: 1.0.1
-Date: 2013-12-16
+Title: Bindings to AppArmor and Security Related Linux Tools
+Version: 2.0
 Author: Jeroen Ooms
 Maintainer: Jeroen Ooms <jeroen.ooms@stat.ucla.edu>
-License: GPL | Apache License (== 2.0)
+License: Apache License (== 2.0)
 URL: http://www.jstatsoft.org/v55/i07/
         http://github.com/jeroenooms/RAppArmor#readme
 BugReports: http://github.com/jeroenooms/RAppArmor/issues
 OS_type: unix
-SystemRequirements: libapparmor-dev, linux (>= 3.0)
-Description: This package implements R functions that interface to various methods in the Linux kernel related to enforcing security restrictions on a certain task (process). The package can apply mandatory access control (MAC) policies by loading an apparmor profile, and set hardware limits (rlimit), uid, gid, affinity and priority of the current process, directly from within R. The high level function eval.secure builds on these foundations to support dynamic sandboxing: it evaluates a single expression in a temporary fork with hard security restrictions and hardware limits without any side effects on the main R session.
-Suggests: testthat
-Imports: parallel, tools, methods
-Packaged: 2013-12-17 22:44:10 UTC; jeroen
+SystemRequirements: linux (>= 3.0), libapparmor-dev (optional)
+Description: Bindings to various methods in the kernel for enforcing security
+    restrictions. AppArmor can apply mandatory access control (MAC) policies on
+    a given task (process) via security profiles with detailed ACL definitions. 
+    In addition the package has kernel bindings for setting the process hardware
+    resource limits (rlimit), uid, gid, affinity and priority. The high level R
+    function 'eval.secure' builds on these methods to do dynamic sandboxing:
+    it evaluates a single R expression within a temporary fork which acts as a 
+    sandbox by enforcing fine grained restrictions without affecting the main R 
+    process.
+VignetteBuilder: R.rsp
+Suggests: testthat, R.rsp
+Depends: tools
+Imports: parallel
+RoxygenNote: 5.0.1
 NeedsCompilation: yes
+Packaged: 2016-03-08 21:14:22 UTC; jeroen
 Repository: CRAN
-Date/Publication: 2013-12-18 09:30:43
+Date/Publication: 2016-03-09 09:13:40

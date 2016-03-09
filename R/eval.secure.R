@@ -1,39 +1,41 @@
 #' Secure evaluation
-#' 
+#'
 #' Evaluate in a sandboxed environment.
-#' 
-#' This function creates a fork, then sets rlimits, uid, gid, priority, 
+#'
+#' This function creates a fork, then sets rlimits, uid, gid, priority,
 #' apparmor profile where specified, and then evaluates the expression
-#' inside the fork. The return object of the evaluation is copied to 
+#' inside the fork. The return object of the evaluation is copied to
 #' the parent process and returned by \code{\link{eval.secure}}. After
-#' evaluation is done, the fork is immediately killed. If the timeout is 
-#' reached the fork is also killed and an error is raised.   
-#' 
+#' evaluation is done, the fork is immediately killed. If the timeout is
+#' reached the fork is also killed and an error is raised.
+#'
 #' Evaluation of an expression using \code{\link{eval.secure}} has no
 #' side effects on the current R session. Any assignments to the global
-#' environment, changes in options, or library loadings done by the 
-#' evaluation will get lost, as we explicitly want to prevent this. 
-#' Only the return value of the expression will be copied to the 
+#' environment, changes in options, or library loadings done by the
+#' evaluation will get lost, as we explicitly want to prevent this.
+#' Only the return value of the expression will be copied to the
 #' main process. Files saved to disk by the sandboxed evaluation (where
-#' allowed by apparmor profile, etc) will also persist.  
-#' 
-#' Note that if the initial process does not have superuser rights, 
-#' rlimits can only be decreased and setuid/setgid might not work. In 
+#' allowed by apparmor profile, etc) will also persist.
+#'
+#' Note that if the initial process does not have superuser rights,
+#' rlimits can only be decreased and setuid/setgid might not work. In
 #' this case, specifying an RLIMIT higher than the current value will
 #' result in an error. Some of the rlimits can also be specified inside
 #' of the apparmor profile. When a rlimit is set both in the profile and
-#' through R, the more restrictive one will be effective. 
-#' 
+#' through R, the more restrictive one will be effective.
+#'
 #' @param ... arguments passed on to \code{\link{eval}}.
 #' @param uid integer or name of linux user. See \code{\link{setuid}}.
 #' @param gid integer or name of linux group. See \code{\link{setgid}}.
-#' @param priority priority. Value between -20 and 20. See \code{\link{setpriority}}. 
-#' @param profile AppArmor security profile. Has to be preloaded by Linux. See \code{\link{aa_change_profile}}.
+#' @param priority priority. Value between -20 and 20. See \code{\link{setpriority}}.
+#' @param profile AppArmor security profile. Has to be preloaded by Linux.
+#' See \code{\link{aa_change_profile}}.
 #' @param timeout timeout in seconds.
 #' @param silent suppress output on stdout. See \code{\link{mcparallel}}.
 #' @param verbose print some C output (TRUE/FALSE)
 #' @param affinity which cpu(s) to use. See \code{\link{setaffinity}}.
-#' @param closeAllConnections closes (and destroys) all user connections. See \code{\link{closeAllConnections}}.
+#' @param closeAllConnections closes (and destroys) all user connections.
+#' See \code{\link{closeAllConnections}}.
 #' @param RLIMIT_AS hard limit passed on to \code{\link{rlimit_as}}.
 #' @param RLIMIT_CORE hard limit passed on to \code{\link{rlimit_core}}.
 #' @param RLIMIT_CPU hard limit passed on to \code{\link{rlimit_cpu}}.
@@ -48,10 +50,13 @@
 #' @param RLIMIT_RTTIME hard limit passed on to \code{\link{rlimit_rttime}}.
 #' @param RLIMIT_SIGPENDING hard limit passed on to \code{\link{rlimit_sigpending}}.
 #' @param RLIMIT_STACK hard limit passed on to \code{\link{rlimit_stack}}.
-#' @import parallel tools methods
+#' @importFrom parallel mcparallel mccollect
+#' @importFrom tools SIGTERM SIGKILL
 #' @export
 #' @useDynLib RAppArmor
-#' @references Jeroen Ooms (2013). The RAppArmor Package: Enforcing Security Policies in {R} Using Dynamic Sandboxing on Linux. \emph{Journal of Statistical Software}, 55(7), 1-34. \url{http://www.jstatsoft.org/v55/i07/}.
+#' @references Jeroen Ooms (2013). The RAppArmor Package: Enforcing Security
+#' Policies in {R} Using Dynamic Sandboxing on Linux. \emph{Journal of Statistical Software},
+#' 55(7), 1-34. \url{http://www.jstatsoft.org/v55/i07/}.
 #' @examples \dontrun{
 #'## Restricting file access ##
 #'eval.secure(list.files("/"))
@@ -89,32 +94,35 @@
 #'eval.secure(forkbomb(), RLIMIT_NPROC=10)
 #'}
 
-eval.secure <- function(..., uid, gid, priority, profile, timeout=60, 
-	silent=FALSE, verbose=FALSE, affinity, closeAllConnections=TRUE,
+eval.secure <- function(..., uid, gid, priority, profile, timeout=60,
+	silent=FALSE, verbose=FALSE, affinity, closeAllConnections=FALSE,
 	RLIMIT_AS, RLIMIT_CORE, RLIMIT_CPU, RLIMIT_DATA, RLIMIT_FSIZE, RLIMIT_MEMLOCK,
-	RLIMIT_MSGQUEUE, RLIMIT_NICE, RLIMIT_NOFILE, RLIMIT_NPROC, RLIMIT_RTPRIO, 
-	RLIMIT_RTTIME, RLIMIT_SIGPENDING, RLIMIT_STACK){	
+	RLIMIT_MSGQUEUE, RLIMIT_NICE, RLIMIT_NOFILE, RLIMIT_NPROC, RLIMIT_RTPRIO,
+	RLIMIT_RTTIME, RLIMIT_SIGPENDING, RLIMIT_STACK){
 
 	#convert linux username to gid
 	if(!missing(gid) && is.character(gid)){
 		gid <- userinfo(gid)$gid;
-	}	
-	
+	}
+
 	#convert linux username to uid
 	if(!missing(uid) && is.character(uid)){
 		uid <- userinfo(uid)$uid;
 	}
-	
+
+  #This prevents some weird errors
+  Sys.sleep(0.01)
+
 	#Do everything in a fork
 	myfork <- mcparallel({
-		
+
 		#set the process group
 		#to do: somehow prevent forks from modifying process group.
-		setpgid(verbose=FALSE);
+		setpgid();
 
 		#close connections
 		if(isTRUE(closeAllConnections)) closeAllConnections();
-		
+
 		#linux stuff
 		if(!missing(RLIMIT_AS)) rlimit_as(RLIMIT_AS, verbose=verbose);
 		if(!missing(RLIMIT_CORE)) rlimit_core(RLIMIT_CORE, verbose=verbose);
@@ -133,41 +141,58 @@ eval.secure <- function(..., uid, gid, priority, profile, timeout=60,
 		if(!missing(affinity)) setaffinity(affinity, verbose=verbose);
 		if(!missing(priority)) setpriority(priority, verbose=verbose);
 		if(!missing(gid)) setgid(gid, verbose=verbose);
-		if(!missing(uid)) setuid(uid, verbose=verbose);		
+		if(!missing(uid)) setuid(uid, verbose=verbose);
 		if(!missing(profile)) aa_change_profile(profile, verbose=verbose);
-		
+
 		#Set the child proc in batch mode to avoid problems when it gets killed:
-		options(device=pdf);
+		options(device = grDevices::pdf);
 		options(menu.graphics=FALSE);
-		
+
 		#evaluate expression
 		eval(...);
-	}, silent=silent);	
+	}, silent=silent);
 
 	#collect result
+  starttime <- Sys.time();
 	myresult <- mccollect(myfork, wait=FALSE, timeout=timeout);
-	
+	enddtime <- Sys.time();
+  totaltime <- as.numeric(enddtime - starttime, units="secs")
+
+	#try to avoid bug/race condition where mccollect returns null without waiting full timeout.
+	#see https://github.com/jeroenooms/opencpu/issues/131
+	#waits for max another 2 seconds if proc looks dead
+	while(is.null(myresult) && totaltime < timeout && totaltime < 2) {
+	  Sys.sleep(.1)
+	  enddtime <- Sys.time();
+	  totaltime <- as.numeric(enddtime - starttime, units="secs")
+	  myresult <- mccollect(myfork, wait = FALSE, timeout = timeout);
+	}
+
 	#kill fork
-	kill(myfork$pid, SIGKILL, verbose=verbose);
-	
+	kill(myfork$pid, SIGKILL, verbose = verbose);
+
 	#kill process group, in case of forks, etc.
-	kill(-1* myfork$pid, SIGKILL, verbose=verbose);
-	
+	kill(-1* myfork$pid, SIGKILL, verbose = FALSE);
+
 	#clean up
-	mccollect(wait=FALSE);
-	
+	mccollect(wait = FALSE);
+
 	#timeout?
 	if(is.null(myresult)){
-		stop("R call did not return within ", timeout, " seconds. Terminating process.", call.=FALSE);		
+    if(isTRUE(timeout > 0 && totaltime > timeout)){
+		  stop("R call did not return within ", timeout, " seconds. Terminating process.", call.=FALSE);
+    } else {
+      stop("R call failed: process died.", call.=FALSE);
+    }
 	}
-	
+
 	output <- myresult[[1]]
 	#forks don't throw errors themselves
-	if(is(output, "try-error")){
+	if(inherits(output, "try-error")){
 		#stop(myresult, call.=FALSE);
 		stop(attr(output, "condition"));
-	}	
-	
+	}
+
 	#return
 	return(output);
 }
