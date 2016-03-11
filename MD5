@@ -1,6 +1,6 @@
-44869f34b68616eb6b889c503bd50a27 *DESCRIPTION
+873ee301e022e1bd3c5e4df6c8510ea6 *DESCRIPTION
 9cf13c1f1e88417eb952b4ab97c3498a *NAMESPACE
-3ee78e5ed59eb15dc487cf4846b03efb *NEWS
+ae939c0b085db184ec185fbe2c9d4ffb *NEWS
 55bc5cbb1f87b4f8061b5562b9145f90 *R/affinity.R
 f9f301091c75c232d6b1490054d9cc40 *R/apparmor.R
 d2d579ca19da6695060f0da931a5f9dd *R/eval.secure.R
@@ -10,7 +10,7 @@ fdf0b87f06af00f12a170557b802a30e *R/process.R
 3c401a608e2bde6a2e2473d374944417 *R/unittests.R
 54df5a18a2398ab982b105390f00836a *R/userinfo.R
 349be4af7b2377e8a52952d574e3a03a *build/vignette.rds
-dd31a0670c0014b4eb4ba349be4a8ec1 *configure
+a068a7cc56eeca742f358bce5999b279 *configure
 65df168ecd1668e1155a10949bf9b0c9 *inst/CITATION
 0b4a3e1c1ab805a17b8d23dcb5408ce6 *inst/doc/v55i07.pdf
 b942170873ce2cc150988a53577dc3d8 *inst/doc/v55i07.pdf.asis
@@ -42,7 +42,7 @@ a159f4b4be8c7a100513e2d1b10fc97b *man/process.Rd
 114e395e4002b85a28e6ac002676645d *src/apparmor.c
 54b8f7b53970bc7c93fa9661f5a80977 *src/process.c
 c8e2429839a348da3292c21a67f42660 *src/rlimits.c
-f0521fd552b2c01e0f66e714999386f6 *tests/run-all.R
+04cfa95c9aa26ad3b98db067b06ec2c4 *tests/run-all.R
 21916f2f88f64b5be3178295b2961fbd *tests/testthat/README
 d0747d8662118db32c9df55f914f97e7 *tests/testthat/helper-pretest.R
 d5f760fe501cd5e23f4bce4f1295298c *tests/testthat/test-affinity.R
