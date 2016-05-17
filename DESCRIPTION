@@ -1,7 +1,7 @@
 Package: RAppArmor
 Type: Package
 Title: Bindings to AppArmor and Security Related Linux Tools
-Version: 2.0.1
+Version: 2.0.2
 Author: Jeroen Ooms
 Maintainer: Jeroen Ooms <jeroen.ooms@stat.ucla.edu>
 License: Apache License (== 2.0)
@@ -18,13 +18,14 @@ Description: Bindings to various methods in the kernel for enforcing security
     function 'eval.secure' builds on these methods to do dynamic sandboxing:
     it evaluates a single R expression within a temporary fork which acts as a 
     sandbox by enforcing fine grained restrictions without affecting the main R 
-    process.
+    process. Recent versions on this package can also be installed on systems
+    without libapparmor, in which case some features are automatically disabled.
 VignetteBuilder: R.rsp
 Suggests: testthat, R.rsp
 Depends: tools
 Imports: parallel
 RoxygenNote: 5.0.1
 NeedsCompilation: yes
-Packaged: 2016-03-10 19:04:37 UTC; jeroen
+Packaged: 2016-05-17 14:33:53 UTC; jeroen
 Repository: CRAN
-Date/Publication: 2016-03-11 10:27:44
+Date/Publication: 2016-05-17 21:34:04
