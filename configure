@@ -42,8 +42,16 @@ echo "#include $PKG_TEST_HEADER" | ${CPP} ${CPPFLAGS} ${PKG_CFLAGS} ${CFLAGS} -x
 if [ $? -ne 0 ]; then
   echo "Could not find AppArmor headers. Please install $PKG_DEB_NAME."
   echo "To build on Linux Systems without AppArmor use:"
-  echo "R CMD INSTALL RAppArmor_2.0.1.tar.gz --configure-vars='NO_APPARMOR=1'"
+  echo "install.packages('RAppArmor', configure.vars = 'NO_APPARMOR=1')"
   exit 1
+fi
+
+# Check unix package
+${R_HOME}/bin/Rscript -e 'stopifnot(unix::aa_config()$compiled)'
+if [ $? -ne 0 ]; then
+ echo "The unix package was built without apparmor. Please reinstall:"
+ echo "install.packages('unix')"
+ exit 1
 fi
 
 # Write to Makevars
