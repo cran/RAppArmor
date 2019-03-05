@@ -1,6 +1,6 @@
-ac155954af1a8e08a234ee21c44265c7 *DESCRIPTION
+e213dc84d76cfcc3506bb25bf851ff5f *DESCRIPTION
 48449d3f7eca64d6e5e84fb29607813d *NAMESPACE
-049db2a7bde5fb22f001f41a341ca182 *NEWS
+dffc31127c9f95f94a29f2dcddf2a0cc *NEWS
 f1c8b2ab4a44e336bd4a7fe029e5d582 *R/affinity.R
 dcedaf686c74582e7a908f6a1a2aba84 *R/apparmor.R
 fa8a548bf461f93187abadaf6b24699f *R/eval.R
@@ -8,7 +8,7 @@ fa8a548bf461f93187abadaf6b24699f *R/eval.R
 d8698e9939483b47f720d8f78a0ffe1a *R/unittests.R
 8263fa821ed8339bad00015b35ec2b86 *build/vignette.rds
 6071edd604dbeb75308cfbedc7790398 *cleanup
-e5ef4dbb2f8d31ba0eadaaed97589bb1 *configure
+3571c45871475308df733c8033dd273b *configure
 65df168ecd1668e1155a10949bf9b0c9 *inst/CITATION
 0b4a3e1c1ab805a17b8d23dcb5408ce6 *inst/doc/v55i07.pdf
 b942170873ce2cc150988a53577dc3d8 *inst/doc/v55i07.pdf.asis
