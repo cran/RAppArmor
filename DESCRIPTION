@@ -1,7 +1,7 @@
 Package: RAppArmor
 Type: Package
 Title: Bindings to AppArmor and Security Related Linux Tools
-Version: 3.2
+Version: 3.2.1
 Authors@R: person("Jeroen", "Ooms", role = c("aut", "cre"), 
     email = "jeroen@berkeley.edu", comment = c(ORCID = "0000-0002-4035-0289"))
 Description: Bindings to kernel methods for enforcing security restrictions. 
@@ -25,8 +25,8 @@ Depends: unix (>= 1.4)
 RoxygenNote: 6.1.1
 Language: en-US
 NeedsCompilation: yes
-Packaged: 2019-03-16 12:55:35 UTC; jeroen
+Packaged: 2020-01-31 11:11:30 UTC; jeroen
 Author: Jeroen Ooms [aut, cre] (<https://orcid.org/0000-0002-4035-0289>)
 Maintainer: Jeroen Ooms <jeroen@berkeley.edu>
 Repository: CRAN
-Date/Publication: 2019-03-16 19:53:52 UTC
+Date/Publication: 2020-01-31 13:10:05 UTC
