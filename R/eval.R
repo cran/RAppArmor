@@ -1,11 +1,14 @@
-#' Sandboxing
+#' eval.secure
 #' 
-#' This function has been superseded by the [unix::eval_safe] function.
+#' The `eval.secure` function has moved into the unix package and is now
+#' an alias for [unix::eval_safe][unix::eval_safe]. Please switch over
+#' to this new function.
 #' 
-#' @export
-#' @name sandboxing
-#' @param ... arguments passed to [unix::eval_safe]
+#' @name eval.secure
+#' @aliases eval.secure
+NULL
+
+
 #' @importFrom unix eval_safe
-eval.secure <- function(...){
-  unix::eval_safe(...)
-}
+#' @export
+eval.secure <- eval_safe
