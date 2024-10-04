@@ -1,4 +1,4 @@
-bc840d96f8fa356d8905a9c0c54ded93 *DESCRIPTION
+d0719f42ce2650dd1080326108ca2e6f *DESCRIPTION
 48449d3f7eca64d6e5e84fb29607813d *NAMESPACE
 abfabff5936d4a4ff5fc2d396378c4bd *NEWS
 f1c02c021824db502fa75508219a8af0 *R/affinity.R
@@ -6,7 +6,7 @@ f1c02c021824db502fa75508219a8af0 *R/affinity.R
 908a59a978703a21f5ad029915bb78f8 *R/eval.R
 989d940dfbc16cdf8dec70feb1517a80 *R/onAttach.R
 d8698e9939483b47f720d8f78a0ffe1a *R/unittests.R
-70aa9c6ca56a4d8f3a333c2c5e37690e *build/vignette.rds
+2f79dbeeddc05b941c600673653b6514 *build/vignette.rds
 6071edd604dbeb75308cfbedc7790398 *cleanup
 fc47d914ac3fdf34ac7354c881713fa5 *configure
 c62b6646ab8baec465f5de44dab185ff *inst/CITATION
